@@ -22,7 +22,7 @@ public abstract class AbstractDao {
 		HibernateFactory.buildIfNeeded();
 	}
 
-	protected void saveOrUpdate(final Object obj) {
+	public void saveOrUpdate(final Object obj) {
 		try {
 			startOperation();
 			session.saveOrUpdate(obj);
@@ -60,7 +60,7 @@ public abstract class AbstractDao {
 		return obj;
 	}
 	
-	protected Object find(final Class<?> clazz, final Object example) {
+	public Object find(final Class<?> clazz, final Object example) {
 		Object obj = null;
 		try {
 			startOperation();
