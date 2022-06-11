@@ -21,6 +21,18 @@ public abstract class AbstractDao {
 	public AbstractDao() {
 		HibernateFactory.buildIfNeeded();
 	}
+	
+	public void executeOnTransaction(TransactionalTask task) {
+		try {
+			startOperation();
+			task.execute(session);
+			tx.commit();
+		} catch (HibernateException e) {
+			handleException(e);
+		} finally {
+			HibernateFactory.close(session);
+		}
+	}
 
 	public void saveOrUpdate(final Object obj) {
 		try {
