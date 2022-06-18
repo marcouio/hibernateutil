@@ -72,6 +72,25 @@ public abstract class AbstractDao {
 		return obj;
 	}
 	
+	public Object findByProp(Class<?> clazz, String propName, Object propValue) {
+		Object obj = null;
+		try {
+			startOperation();
+			addCriteria(clazz, propName, propValue);
+			try{
+				return criteria.uniqueResult();
+			}catch(Exception e){
+				return criteria.list();
+			}
+		} catch (HibernateException e) {
+			handleException(e);
+		} finally {
+			HibernateFactory.close(session);
+		}
+		return obj;
+
+	}
+	
 	public Object find(final Class<?> clazz, final Object example) {
 		Object obj = null;
 		try {
@@ -92,8 +111,8 @@ public abstract class AbstractDao {
 		return obj;
 	}
 
-	protected List<?> findAll(final Class<?> clazz) {
-		List<?> objects = null;
+	public <T> List<T> findAll(final Class<T> clazz) {
+		List<T> objects = null;
 		try {
 			startOperation();
 			Query query = session.createQuery("from " + clazz.getName());
